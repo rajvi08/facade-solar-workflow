@@ -64,8 +64,5 @@ def get_sun_position(location, date, hour, minute):
 
 print("Cell 1 ready.")
 
----
-
----
 
 
