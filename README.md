@@ -262,6 +262,13 @@ rebuild(num_bld.value)
 print("Cell 4 ready — interactive simulation controls enabled.")
 
 ```
+![Cell 4 — Interface Layout](images/cell4a.JPG)
+
+<p align="center">
+  <img src="images/cell4h.png" width="48%" />
+  <img src="images/cell4i.png" width="48%" />
+</p>
+
 
 ##  CELL 5 — Façade-Level Solar Power Model
 
