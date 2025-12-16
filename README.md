@@ -1,4 +1,4 @@
-# Vertical Façade Solar Analysis Workflow  
+# Façade Solar Analysis Workflow  
 ### *A Geometry-Aware and Cloud-Adjusted Solar Assessment Pipeline*
 
 This repository presents a **reproducible computational workflow** for analyzing the **solar energy potential of vertical building façades**. The workflow integrates **deterministic solar geometry**, **urban shading analysis**, and **cloud-adjusted irradiance** to support **façade-level comparative evaluation** in dense urban environments.
