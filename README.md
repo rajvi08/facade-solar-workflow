@@ -655,29 +655,18 @@ This allows you to understand how instantaneous solar access accumulates into me
 
 ![Cell 7 — Daily Facade Power Profile](images/cell7.png)
 
-
 ---
 
-## 📚 References, Acknowledgments & Attribution
-
-### 🔗 SoDa Reference
+###  SoDa Reference
 
 This workflow relies on the **SoDa (Synthetic Solar Data)** framework for cloud-adjusted irradiance modeling.  
 If you use or extend this work, please cite the original SoDa publication:
 
-```bibtex
-@inproceedings{losada2020soda,
-  author    = {Ignacio Losada Carreno and Raksha Ramakrishna and Anna Scaglione and
-               Daniel Arnold and Ciaran Roberts and Sy-Toan Ngo and
-               Sean Peisert and David Pinney},
-  title     = {SoDa: An Irradiance-Based Synthetic Solar Data Generation Tool},
-  booktitle = {2020 IEEE International Conference on Smart Grid Communications (SmartGridComm)},
-  year      = {2020},
-  month     = {November},
-  pages     = {1--6},
-  doi       = {}
-}
-```
+Losada Carreno, I., Ramakrishna, R., Scaglione, A., Arnold, D., Roberts, C.,
+Ngo, S.-T., Peisert, S., & Pinney, D. (2020).  
+**SoDa: An Irradiance-Based Synthetic Solar Data Generation Tool.**  
+*Proceedings of the IEEE International Conference on Smart Grid Communications (SmartGridComm).*
+
 Portions of the codebase, and iterative refinements of code were developed with the assistance of ChatGPT.
 
 This project was developed as part of the course:
