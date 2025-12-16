@@ -120,6 +120,148 @@ def get_cloud_multiplier(location, date, hour, minute, soda_year="2016"):
 print("Cell 2 ready — cloud attenuation enabled.")
 
 ```
+##  CELL 3 — Geometry × Sun × Cloud Interaction
+
+This cell implements the **core geometric–physical interaction layer** of the workflow.  
+It combines **solar position**, **urban geometry**, and **statistical cloud attenuation** to determine *which parts of a vertical façade receive usable solar exposure at a given moment*.
+
+### What this cell does
+
+- Uses **physics-based solar geometry** (azimuth & altitude) from Cell 1  
+- Applies **cloud attenuation** derived from SoDa / NSRDB (Cell 2)  
+- Performs **explicit geometry-based shadow testing** against surrounding buildings  
+- Discretizes each façade into a vertical grid and classifies each cell as:
+  - **Sunlit (1)**  
+  - **Shaded (0)**  
+- Produces a **binary shadow mask** for each façade orientation (North, South, East, West)
+
+
+---
+
+### Implementation
+
+```python
+
+from matplotlib.colors import LinearSegmentedColormap
+from IPython.display import clear_output, display
+
+sun_shadow_cmap = LinearSegmentedColormap.from_list(
+    "sun_shadow", ["#808080", "#FFD700"]
+)
+
+def compute_facade_shadow_grid(buildings, az, alt, facade, origin, w, h):
+    if alt <= 0:
+        return np.zeros((h, w))
+
+    sun = np.array([
+        np.sin(np.deg2rad(az)),
+        np.cos(np.deg2rad(az))
+    ])
+
+    normals = {
+        "South": [0, -1],
+        "North": [0,  1],
+        "East":  [1,  0],
+        "West":  [-1, 0]
+    }
+
+    # Facade must face the sun
+    if np.dot(sun, normals[facade]) <= 0:
+        return np.zeros((h, w))
+
+    grid = np.ones((h, w))
+    ox, oy = origin
+
+    for ix in range(w):
+        for iz in range(h):
+            px = ox + ix + 0.5 if facade in ["South", "North"] else ox
+            py = oy if facade in ["South", "North"] else oy + ix + 0.5
+            pz = iz + 0.5
+
+            for bx, by, bw, bd, bh in buildings:
+                vec = np.array([
+                    (bx + bw / 2) - px,
+                    (by + bd / 2) - py
+                ])
+
+                if np.dot(vec, sun) > 0:
+                    shadow_height = bh - np.linalg.norm(vec) * np.tan(np.deg2rad(alt))
+                    if pz < shadow_height:
+                        grid[iz, ix] = 0
+                        break
+
+    return grid
+
+
+def draw_scene(buildings, location, date, hour, minute, soda_year):
+    # --- Solar geometry (physics-based) ---
+    az, alt = get_sun_position(location, date, hour, minute)
+
+    # --- Cloud attenuation (NSRDB-calibrated) ---
+    C = get_cloud_multiplier(
+        location,
+        date,
+        hour,
+        minute,
+        soda_year=soda_year
+    )
+
+    facades = {
+        "South": compute_facade_shadow_grid(buildings, az, alt, "South", (8, 8), 4, 10),
+        "East":  compute_facade_shadow_grid(buildings, az, alt, "East",  (12, 8), 4, 10),
+        "West":  compute_facade_shadow_grid(buildings, az, alt, "West",  (8, 8), 4, 10),
+        "North": compute_facade_shadow_grid(buildings, az, alt, "North", (8, 12), 4, 10),
+    }
+
+    fig = plt.figure(figsize=(18, 10))
+    gs = fig.add_gridspec(2, 4)
+
+    # ---- PLAN VIEW ----
+    ax = fig.add_subplot(gs[0, 0])
+    ax.set_xlim(0, 20)
+    ax.set_ylim(0, 20)
+    ax.set_aspect("equal")
+    ax.set_title("PLAN VIEW (N ↑)")
+
+    ax.add_patch(plt.Rectangle((8, 8), 4, 4, color="green", alpha=0.7))
+    ax.text(10, 10, "M", ha="center", va="center", fontweight="bold")
+
+    for i, (bx, by, bw, bd, _) in enumerate(buildings, 1):
+        ax.add_patch(plt.Rectangle((bx, by), bw, bd, color="gray", alpha=0.6))
+        ax.text(bx + bw / 2, by + bd / 2, f"B{i}", ha="center", va="center")
+
+    dx = 6 * np.sin(np.deg2rad(az))
+    dy = 6 * np.cos(np.deg2rad(az))
+    ax.arrow(10, 10, dx, dy, head_width=0.4, color="orange")
+    ax.scatter(10 + dx, 10 + dy, s=120, color="yellow", edgecolor="black", zorder=5)
+
+    # ---- ELEVATION VIEW ----
+    ax = fig.add_subplot(gs[1, 0])
+    ax.set_xlim(0, 20)
+    ax.set_ylim(0, 20)
+    ax.set_aspect("equal")
+    ax.set_title("ELEVATION VIEW")
+
+    ax.add_patch(plt.Rectangle((8, 0), 4, 10, color="green", alpha=0.7))
+    for i, (bx, _, bw, _, bh) in enumerate(buildings, 1):
+        ax.add_patch(plt.Rectangle((bx, 0), bw, bh, color="gray", alpha=0.6))
+
+    # ---- FACADES ----
+    for i, (k, g) in enumerate(facades.items()):
+        ax = fig.add_subplot(gs[i // 2, i % 2 + 2])
+        ax.imshow(g * C, cmap=sun_shadow_cmap, origin="lower", vmin=0, vmax=1)
+        ax.set_title(f"{k} Facade")
+
+    tz = LOCATIONS[location]["tz"]
+    plt.suptitle(
+        f"{location} | {date} {hour:02d}:{minute:02d} ({tz})\n"
+        f"Azimuth = {az:.1f}° | Altitude = {alt:.1f}° | Cloud Multiplier = {C:.2f}",
+        fontsize=14
+    )
+
+    plt.tight_layout()
+    plt.show()
+```
 
 ##  CELL 4 — Interactive Controls & Simulation Orchestration
 
