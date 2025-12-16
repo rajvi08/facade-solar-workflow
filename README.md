@@ -802,7 +802,6 @@ This allows you to understand how instantaneous solar access accumulates into me
 ###  SoDa Reference
 
 This workflow relies on the **SoDa (Synthetic Solar Data)** framework for cloud-adjusted irradiance modeling.  
-If you use or extend this work, please cite the original SoDa publication:
 
 Losada Carreno, I., Ramakrishna, R., Scaglione, A., Arnold, D., Roberts, C.,
 Ngo, S.-T., Peisert, S., & Pinney, D. (2020).  
