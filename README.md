@@ -262,7 +262,33 @@ rebuild(num_bld.value)
 print("Cell 4 ready — interactive simulation controls enabled.")
 
 ```
-![Cell 4 — Interface Layout](images/cell4a.JPG)
+After running **Cell 4**, you will see an interactive interface similar to the image below.
+
+This interface allows you to:
+- Toggle the **number of surrounding buildings**
+- Adjust each building’s **position, footprint, and height**
+- Select a **location** from the dropdown
+- Change the **date and time** using the sliders
+
+As you move the **time slider**, you will observe real-time changes in:
+- Sun position (azimuth and altitude)
+- Resulting **shading patterns** on each façade
+- The proportion of sunlit vs shaded façade area
+
+**Important note:**  
+Every time you modify any slider or building parameter in **Cell 4**, you must **re-run Cell 6 and Cell 7** to obtain updated power and energy results that correspond to the new geometry and sun position.
+
+![Cell 4 — Interactive Controls Overview](images/cell4a.JPG)
+
+
+The two images below show **two different building arrangements** evaluated at the **same location and time**.
+
+They demonstrate how changes in surrounding building geometry alone can significantly alter:
+- Façade shading patterns
+- Solar exposure distribution
+- Downstream power and energy results
+
+This highlights the sensitivity of vertical façade solar performance to **urban context**, even when all environmental parameters remain constant.
 
 <p align="center">
   <img src="images/cell4h.png" width="48%" />
