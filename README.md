@@ -446,6 +446,8 @@ plt.show()
 print("Cell 6 ready — instantaneous façade power summary generated.")
 
 ```
+![Cell 6 — Instantaneous Facade Power](images/cell6.png)
+
 
 ##  CELL 7 — Daily Energy Aggregation & Visualization
 
@@ -603,5 +605,8 @@ plt.show()
 print("Cell 7 ready — daily energy aggregation and visualization complete.")
 
 ```
+![Cell 7 — Daily Power Profile](images/cell7.png)
+
+![Cell 7 — Daily Energy Summary](images/cell7a.png)
 
 
